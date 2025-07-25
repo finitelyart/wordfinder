@@ -1,0 +1,180 @@
+:root {
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --bg-color: #f0f0f0;
+  --text-color: #333;
+  --primary-color: #007bff;
+  --primary-color-hover: #0056b3;
+  --border-color: #ccc;
+  --cell-bg: #fff;
+  --cell-highlight: #bde0fe;
+  --cell-found: #a2d2ff;
+  --word-found-color: #888;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 1rem;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+button, select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+button:hover {
+  background-color: var(--primary-color-hover);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+#game-board-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#word-list-container {
+  padding: 1rem;
+  background-color: var(--cell-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#word-list-container h2 {
+  margin-top: 0;
+}
+
+#word-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+  text-transform: uppercase;
+}
+
+#word-list li {
+  font-size: 1.1rem;
+}
+
+#word-list li.found {
+  text-decoration: line-through;
+  color: var(--word-found-color);
+}
+
+.word-search-grid {
+  border-collapse: collapse;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.word-search-grid td {
+  width: 2.2rem;
+  height: 2.2rem;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid var(--border-color);
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: var(--cell-bg);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.word-search-grid td.highlight-active {
+  background-color: var(--cell-highlight);
+}
+
+.word-search-grid td.highlight-found {
+  background-color: var(--cell-found);
+  color: #fff;
+}
+
+#game-over-message {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 2rem;
+  background: var(--cell-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#game-over-message.hidden {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #game-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  #game-board-container {
+    flex: 2;
+  }
+
+  #word-list-container {
+    flex: 1;
+    max-width: 300px;
+  }
+
+  .word-search-grid td {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+  }
+}

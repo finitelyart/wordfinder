@@ -5,14 +5,37 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff">
-    <title>Vite PWA Starter</title>
+    <title>Woordzoeker - Word Search</title>
+    <meta name="description" content="A simple and fun word search game.">
   </head>
   <body>
     <div id="app">
-      <h1>🚀 Vite PWA Starter</h1>
-      <p>Your app is running!</p>
-      <p>This project is ready to go. Just edit the content and push.</p>
+      <header>
+        <h1>Woordzoeker</h1>
+        <div class="controls">
+          <button id="new-game">New Game</button>
+          <div class="difficulty-select">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div id="game-container">
+          <div id="game-board-container"></div>
+          <div id="word-list-container"></div>
+        </div>
+        <div id="game-over-message" class="hidden">
+          <h2>Congratulations!</h2>
+          <p>You found all the words!</p>
+          <button id="play-again">Play Again</button>
+        </div>
+      </main>
     </div>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
