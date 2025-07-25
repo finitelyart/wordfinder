@@ -3,8 +3,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // Replace 'vite-pwa-starter' with your actual GitHub repository name if needed.
-  base: '/vite-pwa-starter/', 
+  base: process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/` : '/',
   plugins: [
     VitePWA({ registerType: 'autoUpdate' })
   ]
