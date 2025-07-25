@@ -1,5 +1,6 @@
-import { getThemes, getThemeData } from '../core/word-provider.js';
-import { createPuzzle } from '../core/generator.js';
+import { getThemes, getThemeData } from '/src/core/word-provider.js';
+import { createPuzzle } from '/src/core/generator.js';
+import { playSound } from '/src/utils/audio.js';
 import GameBoard from './GameBoard.js';
 import WordList from './WordList.js';
 
@@ -118,8 +119,10 @@ export default class GameController {
 
     if (solutionEntry) {
       this.state.foundWords.push(solutionEntry.word);
+      this.render(); // Re-render first to apply 'found' styles
+      playSound('found');
+      this.gameBoard.animateFoundWord(solutionEntry);
       this.saveState();
-      this.render();
       this.checkGameOver();
     }
   }
@@ -153,6 +156,7 @@ export default class GameController {
       this.state.isGameOver = true;
       this.gameOverMessage.classList.remove('hidden');
       this.rootElement.classList.add('game-over');
+      playSound('win');
       this.saveState();
     }
   }

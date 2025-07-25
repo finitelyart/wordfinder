@@ -1,5 +1,5 @@
-import './assets/style.css';
-import GameController from './ui/GameController.js';
+import '/src/assets/style.css';
+import GameController from '/src/ui/GameController.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = document.querySelector('#app');

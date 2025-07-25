@@ -1,4 +1,4 @@
-import { createElement } from '../utils/dom.js';
+import { createElement } from '/src/utils/dom.js';
 
 export default class WordList {
   /**
