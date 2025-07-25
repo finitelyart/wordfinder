@@ -11,21 +11,28 @@
   --word-found-color: #888;
 }
 
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
 body {
   font-family: var(--font-family-sans);
   background-color: var(--bg-color);
   color: var(--text-color);
   margin: 0;
-  padding: 1rem;
+  padding: 0;
   line-height: 1.5;
-  display: flex;
-  justify-content: center;
 }
 
 #app {
   width: 100%;
-  max-width: 900px;
+  height: 100%;
+  max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -33,8 +40,10 @@ header {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   gap: 1rem;
+  padding: 0.5rem 1rem;
+  flex-shrink: 0;
 }
 
 h1 {
@@ -68,21 +77,30 @@ button:hover {
 }
 
 main {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  padding: 1rem;
 }
 
 #game-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 #game-board-container {
-  overflow-x: auto;
+  overflow: hidden;
   -webkit-overflow-scrolling: touch;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #word-list-container {
@@ -90,6 +108,8 @@ main {
   background-color: var(--cell-bg);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-height: 35%;
+  overflow-y: auto;
 }
 
 #word-list-container h2 {
@@ -123,16 +143,17 @@ main {
 }
 
 .word-search-grid td {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.5em;
+  height: 2.5em;
   text-align: center;
   vertical-align: middle;
   border: 1px solid var(--border-color);
-  font-size: 1.2rem;
+  font-size: 1.2em;
   font-weight: bold;
   background-color: var(--cell-bg);
   cursor: pointer;
   text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .word-search-grid td.highlight-active {
@@ -144,6 +165,10 @@ main {
   color: #fff;
 }
 
+.word-search-grid td.newly-found {
+  animation: found-word-pop 0.3s ease-out;
+}
+
 #game-over-message {
   text-align: center;
   padding: 2rem;
@@ -153,28 +178,51 @@ main {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+#game-over-message:not(.hidden) {
+  animation: game-over-fade-in 0.5s ease-out forwards;
+}
+
 #game-over-message.hidden {
   display: none;
 }
 
+@keyframes found-word-pop {
+  50% {
+    transform: scale(1.2);
+    background-color: var(--primary-color);
+  }
+}
+
+@keyframes game-over-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (min-width: 768px) {
+  main {
+    padding: 1rem;
+  }
   #game-container {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 2rem;
   }
   
   #game-board-container {
     flex: 2;
+    height: 100%;
   }
 
   #word-list-container {
     flex: 1;
     max-width: 300px;
-  }
-
-  .word-search-grid td {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.5rem;
+    height: 100%;
+    max-height: none;
   }
 }

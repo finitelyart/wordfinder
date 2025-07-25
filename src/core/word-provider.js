@@ -14,6 +14,26 @@ const themes = {
     words: ['code', 'bugs', 'java', 'script', 'array', 'react', 'node', 'html', 'vite', 'const', 'agile', 'logic', 'class', 'style', 'build', 'query'],
     options: { rows: 18, cols: 18, allowBackwards: true, allowDiagonals: true, wordCount: 12 },
   },
+  science: {
+    name: 'Science',
+    words: ['atom', 'cell', 'dna', 'energy', 'force', 'gravity', 'ion', 'lab', 'mass', 'neuron', 'orbit', 'phase', 'quark', 'react', 'space', 'tesla', 'volt'],
+    options: { rows: 15, cols: 15, allowBackwards: true, allowDiagonals: true, wordCount: 12 },
+  },
+  space: {
+    name: 'Space',
+    words: ['comet', 'earth', 'galaxy', 'jupiter', 'luna', 'mars', 'nebula', 'orbit', 'pluto', 'rocket', 'saturn', 'star', 'sun', 'venus', 'void'],
+    options: { rows: 15, cols: 15, allowBackwards: true, allowDiagonals: true, wordCount: 10 },
+  },
+  'eten-nl': {
+    name: 'Eten (Dutch)',
+    words: ['kaas', 'brood', 'boter', 'melk', 'appel', 'peer', 'druif', 'soep', 'vlees', 'vis', 'rijst', 'pasta', 'patat', 'zout', 'peper'],
+    options: { rows: 15, cols: 15, allowBackwards: true, allowDiagonals: true, wordCount: 10 },
+  },
+  'dieren-nl': {
+    name: 'Dieren (Dutch)',
+    words: ['hond', 'kat', 'paard', 'vogel', 'vis', 'leeuw', 'aap', 'olifant', 'tijger', 'slang', 'beer', 'wolf', 'haai', 'koe', 'schaap'],
+    options: { rows: 15, cols: 15, allowBackwards: true, allowDiagonals: true, wordCount: 10 },
+  },
 };
 
 export function getThemes() {
