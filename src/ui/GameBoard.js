@@ -1,4 +1,5 @@
 import { createElement } from '../utils/dom.js';
+import { initAudio } from '../utils/audio.js';
 
 export default class GameBoard {
   /**
@@ -18,6 +19,7 @@ export default class GameBoard {
     this.rootElement.appendChild(this.table);
 
     this.setupEventListeners();
+    window.addEventListener('resize', () => this.fitGridToContainer());
   }
   
   /**
@@ -62,6 +64,31 @@ export default class GameBoard {
     });
     this.table.appendChild(tbody);
     this.highlightFoundWords(foundWordPaths);
+    // Use a small timeout to ensure the browser has rendered the table before we measure it
+    setTimeout(() => this.fitGridToContainer(), 0);
+  }
+
+  fitGridToContainer() {
+    const container = this.rootElement;
+    const table = this.table;
+
+    if (!container.clientWidth || !table.rows.length) {
+      return;
+    }
+
+    // Set a large font size to start with, then scale down.
+    let fontSize = 32; // max font size in px
+    table.style.fontSize = `${fontSize}px`;
+
+    // Iteratively shrink font size until the table fits within the container.
+    // We add a 5% margin for padding.
+    const targetWidth = container.clientWidth * 0.95;
+    const targetHeight = container.clientHeight * 0.95;
+
+    while ((table.scrollWidth > targetWidth || table.scrollHeight > targetHeight) && fontSize > 6) {
+      fontSize -= 1;
+      table.style.fontSize = `${fontSize}px`;
+    }
   }
 
   getCellFromEvent(event) {
@@ -75,6 +102,7 @@ export default class GameBoard {
   }
 
   handleInteractionStart(event) {
+    initAudio(); // Initialize audio on first user interaction
     event.preventDefault();
     const cell = this.getCellFromEvent(event);
     if (cell) {
@@ -147,13 +175,39 @@ export default class GameBoard {
     return cells;
   }
 
-  highlightFoundWords(foundWordPaths) {
-    const directionVectors = {
+  animateFoundWord(wordPath) {
+    const directionVectors = this.getDirectionVectors();
+    const { word, start, direction } = wordPath;
+    const vec = directionVectors[direction];
+    if (!vec) return;
+
+    const cells = [];
+    for (let i = 0; i < word.length; i++) {
+        const r = start.row + i * vec.row;
+        const c = start.col + i * vec.col;
+        const cell = this.table.rows[r]?.cells[c];
+        if (cell) {
+            cells.push(cell);
+        }
+    }
+    
+    cells.forEach(cell => cell.classList.add('newly-found'));
+    setTimeout(() => {
+        cells.forEach(cell => cell.classList.remove('newly-found'));
+    }, 300); // Corresponds to animation duration
+  }
+
+  getDirectionVectors() {
+    return {
         'E':  { row: 0, col: 1 },  'W':  { row: 0, col: -1 },
         'S':  { row: 1, col: 0 },  'N':  { row: -1, col: 0 },
         'SE': { row: 1, col: 1 },  'SW': { row: 1, col: -1 },
         'NE': { row: -1, col: 1}, 'NW': { row: -1, col: -1 }
     };
+  }
+
+  highlightFoundWords(foundWordPaths) {
+    const directionVectors = this.getDirectionVectors();
       
     foundWordPaths.forEach(({ word, start, direction }) => {
         const vec = directionVectors[direction];
