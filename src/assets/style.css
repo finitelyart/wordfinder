@@ -22,8 +22,10 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   margin: 0;
-  padding: 0;
+  padding: 0; /* Fallback for browsers that don't support env() */
   line-height: 1.5;
+  /* Add padding to account for safe areas on mobile devices */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 #app {
@@ -179,8 +181,16 @@ main {
 }
 
 #game-over-message:not(.hidden) {
-  animation: game-over-fade-in 0.5s ease-out forwards;
+  /* The parent container is now just for layout; animations are on children. */
 }
+
+#game-over-message:not(.hidden) > * {
+  animation: game-over-fade-in 0.5s ease-out both;
+}
+
+#game-over-message:not(.hidden) h2 { animation-delay: 0.1s; }
+#game-over-message:not(.hidden) p { animation-delay: 0.2s; }
+#game-over-message:not(.hidden) button { animation-delay: 0.3s; }
 
 #game-over-message.hidden {
   display: none;

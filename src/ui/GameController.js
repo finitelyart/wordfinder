@@ -107,23 +107,33 @@ export default class GameController {
 
   handleWordSelection(start, end) {
     if (this.state.isGameOver) return;
-    
+
     const wordForward = this.readWordFromGrid(start, end);
-    if (!wordForward) return;
-    
+    if (!wordForward) {
+      // Invalid selection (e.g. not a straight line)
+      playSound('invalid');
+      return;
+    }
+
     const wordBackward = wordForward.split('').reverse().join('');
 
-    const solutionEntry = this.state.puzzle.solution.find(s => 
+    const solutionEntry = this.state.puzzle.solution.find(s =>
       !this.state.foundWords.includes(s.word) && (s.word === wordForward || s.word === wordBackward)
     );
 
     if (solutionEntry) {
       this.state.foundWords.push(solutionEntry.word);
+      if (navigator.vibrate) {
+        navigator.vibrate(50); // Short buzz for found word
+      }
       this.render(); // Re-render first to apply 'found' styles
       playSound('found');
       this.gameBoard.animateFoundWord(solutionEntry);
       this.saveState();
       this.checkGameOver();
+    } else {
+      // Valid line, but not a correct word
+      playSound('invalid');
     }
   }
 
@@ -157,6 +167,9 @@ export default class GameController {
       this.gameOverMessage.classList.remove('hidden');
       this.rootElement.classList.add('game-over');
       playSound('win');
+      if (navigator.vibrate) {
+        navigator.vibrate([100, 30, 100]); // Victory vibration
+      }
       this.saveState();
     }
   }

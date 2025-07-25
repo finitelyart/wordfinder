@@ -1,5 +1,5 @@
 import { createElement } from '../utils/dom.js';
-import { initAudio } from '../utils/audio.js';
+import { initAudio, playSound } from '../utils/audio.js';
 
 export default class GameBoard {
   /**
@@ -120,6 +120,7 @@ export default class GameBoard {
     if (cell && (cell.row !== this.selection.end.row || cell.col !== this.selection.end.col)) {
       this.selection.end = { row: cell.row, col: cell.col };
       this.updateHighlight();
+      playSound('tick');
     }
   }
 

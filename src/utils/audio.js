@@ -51,5 +51,19 @@ export function playSound(type) {
     gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
     oscillator.start(now);
     oscillator.stop(now + 0.5);
+  } else if (type === 'tick') {
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(1200, now);
+    gainNode.gain.setValueAtTime(0.05, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+    oscillator.start(now);
+    oscillator.stop(now + 0.1);
+  } else if (type === 'invalid') {
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(150, now);
+    gainNode.gain.setValueAtTime(0.08, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+    oscillator.start(now);
+    oscillator.stop(now + 0.2);
   }
 }
