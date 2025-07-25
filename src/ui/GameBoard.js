@@ -1,5 +1,5 @@
-import { createElement } from '/src/utils/dom.js';
-import { initAudio } from '/src/utils/audio.js';
+import { createElement } from '../utils/dom.js';
+import { initAudio } from '../utils/audio.js';
 
 export default class GameBoard {
   /**

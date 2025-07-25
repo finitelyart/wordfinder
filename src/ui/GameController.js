@@ -1,6 +1,6 @@
-import { getThemes, getThemeData } from '/src/core/word-provider.js';
-import { createPuzzle } from '/src/core/generator.js';
-import { playSound } from '/src/utils/audio.js';
+import { getThemes, getThemeData } from '../core/word-provider.js';
+import { createPuzzle } from '../core/generator.js';
+import { playSound } from '../utils/audio.js';
 import GameBoard from './GameBoard.js';
 import WordList from './WordList.js';
 
