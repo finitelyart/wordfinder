@@ -1,33 +1,35 @@
-// This structure maps language codes to functions that return a dynamic import.
-const dictionaries = {
-  'en-US': () => import('wordlist-english/american-words.json'),
-  'en-GB': () => import('wordlist-english/british-words.json'),
-  // Future language additions would go here
+const themes = {
+  animals: {
+    name: 'Animals',
+    words: ['cat', 'dog', 'lion', 'tiger', 'bear', 'horse', 'zebra', 'monkey', 'elephant', 'giraffe', 'snake', 'hippo', 'shark', 'eagle', 'wolf'],
+    options: { rows: 15, cols: 15, allowBackwards: true, allowDiagonals: true, wordCount: 10 },
+  },
+  fruits: {
+    name: 'Fruits',
+    words: ['apple', 'banana', 'orange', 'grape', 'mango', 'lemon', 'cherry', 'peach', 'melon', 'berry', 'kiwi', 'plum', 'lime', 'papaya', 'guava'],
+    options: { rows: 12, cols: 12, allowBackwards: false, allowDiagonals: true, wordCount: 8 },
+  },
+  programming: {
+    name: 'Programming',
+    words: ['code', 'bugs', 'java', 'script', 'array', 'react', 'node', 'html', 'vite', 'const', 'agile', 'logic', 'class', 'style', 'build', 'query'],
+    options: { rows: 18, cols: 18, allowBackwards: true, allowDiagonals: true, wordCount: 12 },
+  },
 };
 
+export function getThemes() {
+  return Object.keys(themes).map(key => ({ id: key, name: themes[key].name }));
+}
+
 /**
- * Asynchronously fetches and filters a word list for a given language.
- * @param {string} language - The language code (e.g., 'en-US').
- * @param {object} options - Filtering options for the words.
- * @param {number} options.minLength - The minimum length of words to include.
- * @param {number} options.maxLength - The maximum length of words to include.
- * @returns {Promise<string[]>} A promise that resolves to an array of words.
+ * Gets the theme data.
+ * @param {string} themeId - The ID of the theme (e.g., 'animals').
+ * @returns {{name: string, words: string[], options: object}|null} An object with theme data, or null if theme not found.
  */
-export async function getWordList(language = 'en-US', options = { minLength: 3, maxLength: 10 }) {
-  if (!dictionaries[language]) {
-    console.error(`Dictionary for language "${language}" not found.`);
-    return [];
+export function getThemeData(themeId) {
+  if (themes[themeId]) {
+    // Return a copy to prevent mutation of original theme data
+    return JSON.parse(JSON.stringify(themes[themeId]));
   }
-
-  try {
-    // Dynamically import the JSON module for the selected language.
-    const wordListModule = await dictionaries[language]();
-    const words = wordListModule.default;
-
-    // Filter the words based on the provided length constraints.
-    return words.filter(word => word.length >= options.minLength && word.length <= options.maxLength);
-  } catch (error) {
-    console.error(`Failed to load dictionary for language "${language}":`, error);
-    return [];
-  }
+  console.error(`Theme "${themeId}" not found.`);
+  return null;
 }

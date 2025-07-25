@@ -1,15 +1,9 @@
-import { getWordList } from '../core/word-provider.js';
+import { getThemes, getThemeData } from '../core/word-provider.js';
 import { createPuzzle } from '../core/generator.js';
 import GameBoard from './GameBoard.js';
 import WordList from './WordList.js';
 
 const STORAGE_KEY = 'woordzoekerGameState';
-
-const DIFFICULTY_SETTINGS = {
-  easy: { rows: 10, cols: 10, allowBackwards: false, allowDiagonals: false, wordCount: 8, wordMinLength: 3, wordMaxLength: 6 },
-  medium: { rows: 15, cols: 15, allowBackwards: true, allowDiagonals: true, wordCount: 12, wordMinLength: 4, wordMaxLength: 8 },
-  hard: { rows: 20, cols: 20, allowBackwards: true, allowDiagonals: true, wordCount: 16, wordMinLength: 5, wordMaxLength: 10 },
-};
 
 function storageAvailable() {
   try {
@@ -35,12 +29,13 @@ export default class GameController {
     // UI Controls
     this.newGameBtn = this.rootElement.querySelector('#new-game');
     this.playAgainBtn = this.rootElement.querySelector('#play-again');
-    this.difficultySelector = this.rootElement.querySelector('#difficulty');
+    this.themeSelector = this.rootElement.querySelector('#theme');
     this.gameOverMessage = this.rootElement.querySelector('#game-over-message');
 
     this.state = null;
     this.hasStorage = storageAvailable();
 
+    this.populateThemeSelector();
     this.setupEventListeners();
     this.initGame();
   }
@@ -49,40 +44,55 @@ export default class GameController {
     this.gameBoard.onWordSelect((start, end) => this.handleWordSelection(start, end));
     this.newGameBtn.addEventListener('click', () => this.startNewGame());
     this.playAgainBtn.addEventListener('click', () => this.startNewGame());
-    this.difficultySelector.addEventListener('change', () => this.startNewGame());
+    this.themeSelector.addEventListener('change', () => this.startNewGame());
   }
 
   initGame() {
     const savedState = this.loadState();
     if (savedState) {
       this.state = savedState;
-      this.difficultySelector.value = this.state.difficulty;
+      this.themeSelector.value = this.state.theme;
       this.render();
     } else {
       this.startNewGame();
     }
   }
 
-  async startNewGame() {
+  populateThemeSelector() {
+    const themes = getThemes();
+    this.themeSelector.innerHTML = '';
+    themes.forEach(theme => {
+      const option = document.createElement('option');
+      option.value = theme.id;
+      option.textContent = theme.name;
+      this.themeSelector.appendChild(option);
+    });
+  }
+
+  startNewGame() {
     if (this.hasStorage) {
       localStorage.removeItem(STORAGE_KEY);
     }
     this.gameOverMessage.classList.add('hidden');
     this.rootElement.classList.remove('game-over');
+
+    const themeId = this.themeSelector.value;
+    const themeData = getThemeData(themeId);
+    if (!themeData) {
+        console.error(`Could not start new game: theme "${themeId}" not found.`);
+        return;
+    }
+
+    const { words, options } = themeData;
+    const wordsToPlace = this.selectRandomWords(words, options.wordCount);
     
-    const difficulty = this.difficultySelector.value;
-    const settings = DIFFICULTY_SETTINGS[difficulty];
-    
-    const allWords = await getWordList('en-US', { minLength: settings.wordMinLength, maxLength: settings.wordMaxLength });
-    const wordsToPlace = this.selectRandomWords(allWords, settings.wordCount);
-    
-    const puzzle = createPuzzle(wordsToPlace, settings);
+    const puzzle = createPuzzle(wordsToPlace, options);
 
     this.state = {
       puzzle,
       foundWords: [],
       isGameOver: false,
-      difficulty,
+      theme: themeId,
     };
     
     this.saveState();
@@ -176,8 +186,12 @@ export default class GameController {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const state = JSON.parse(saved);
-        if(state && state.puzzle && state.foundWords && !state.isGameOver) {
-            return state;
+        // Basic validation of the saved state
+        if(state && state.puzzle && state.foundWords && state.theme && !state.isGameOver) {
+            // Check if theme still exists
+            if (getThemeData(state.theme)) {
+              return state;
+            }
         }
       }
       return null;
