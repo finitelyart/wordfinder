@@ -1,8 +1,8 @@
 // This structure maps language codes to functions that return a dynamic import.
 // This is inspired by multilingual JSON formats and the file structure of the wordlist-english package.
 const dictionaries = {
-  'en-US': () => import('wordlist-english/english-words-70.json'),
-  'en-GB': () => import('wordlist-english/british-words-70.json'),
+  'en-US': () => import('wordlist-english/american-words.json'),
+  'en-GB': () => import('wordlist-english/british-words.json'),
   // Future language additions would go here, e.g.:
   // 'nl-NL': () => import('path/to/dutch-words.json'),
 };
